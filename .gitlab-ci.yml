@@ -1,0 +1,57 @@
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules
+
+build_prod_job:
+  stage: build
+  script:
+    - npm install
+  only:
+    - tags
+  tags:
+    - invasaonerd
+
+deploy_prod_job:
+  stage: deploy
+  script:
+   # Invasao Background Production
+    - rsync -avz -e "ssh -p 22022" --exclude=.git --exclude=.gitignore --exclude=.gitlab-ci.yml ./ $DEPLOY_USER@$INVASAO_APP_SRV_01:$FOLDER_APP_PROD/ --delete
+    - ssh -p 22022 $DEPLOY_USER@$INVASAO_APP_SRV_01 "systemctl restart invasao-background-prod"
+    - ssh -p 22022 $DEPLOY_USER@$INVASAO_APP_SRV_01 "chown root:root $FOLDER_APP_PROD -R"
+  environment:
+    name: Production
+    url: https://invasaonerd.com.br
+  when: on_success
+  only:
+    - tags
+  tags:
+    - invasaonerd
+
+build_staging_job:
+  stage: build
+  script:
+    - npm install
+  only:
+    - staging
+  tags:
+    - invasaonerd
+
+deploy_staging_job:
+  stage: deploy
+  script:
+   # Invasao Background Staging
+    - rsync -avz -e "ssh -p 22022" --exclude=.git --exclude=.gitignore --exclude=.gitlab-ci.yml ./ $DEPLOY_USER@$INVASAO_APP_STG_SRV:$FOLDER_APP_STG/ --delete
+    - ssh -p 22022 $DEPLOY_USER@$INVASAO_APP_STG_SRV "systemctl restart invasao-background-stg"
+    - ssh -p 22022 $DEPLOY_USER@$INVASAO_APP_STG_SRV "chown root:root $FOLDER_APP_STG -R"
+  environment:
+    name: Staging
+    url: https://stg.invasaonerd.com.br
+  when: on_success
+  only:
+    - staging
+  tags:
+    - invasaonerd

@@ -1,0 +1,30 @@
+{
+  "name": "invasao-rotinas",
+  "version": "1.0.0",
+  "description": "Rotinas que checam atualizações para o invasão nerd",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "debug": "nodemon --inspect index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.vigiadepreco.com.br/invaosanerd/rotinas.git"
+  },
+  "keywords": [
+    "in",
+    "invasão",
+    "nerd",
+    "rotinas"
+  ],
+  "author": "Diego Lamarão",
+  "license": "ISC",
+  "dependencies": {
+    "cron": "^1.6.0",
+    "googleapis": "^37.2.0",
+    "jsdom": "^13.2.0",
+    "mongodb": "^3.1.13",
+    "organized": "^1.0.3",
+    "request": "^2.88.0"
+  }
+}
